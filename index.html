@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Check-in</title>
+<style>
+body {
+  font-family: sans-serif;
+  background: #f2f2f2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 14px;
+  width: 280px;
+  text-align: center;
+}
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 8px;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h4>Check-in</h4>
+
+  <select id="user">
+    <option value="voce">Você</option>
+    <option value="ela">Ela</option>
+  </select>
+
+  <button onclick="send('Disponível')">Disponível</button>
+  <button onclick="send('Indisponível')">Indisponível</button>
+
+  <p id="view"></p>
+</div>
+
+<script>
+const API = "https://script.google.com/macros/s/AKfycbySwv5c-MDw89w_9Akj8kX9ZLGv_uYUl5ONejlDelO6TXHHUzoInt-yBzqxx5cGlvCEMw/exec";
+
+function send(status){
+  const u = document.getElementById("user").value;
+  fetch(API,{
+    method:"POST",
+    body:new URLSearchParams({user:u,status:status})
+  });
+}
+
+setInterval(()=>{
+  fetch(API)
+    .then(r=>r.json())
+    .then(d=>{
+      document.getElementById("view").innerText =
+        `Você: ${d[0][1]||"-"} | Ela: ${d[1][1]||"-"}`;
+    });
+},2000);
+</script>
+
+</body>
+</html>
